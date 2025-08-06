@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculateur d'Empreinte Carbone - Stockage Numérique | Systnaps</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-shadow {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .result-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .eco-card {
+            background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%);
+        }
+        .info-card {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        }
+        @media print {
+            body { margin: 0; padding: 20px; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen py-6">
+        <!-- Header -->
+        <div class="max-w-6xl mx-auto px-4 mb-8">
+            <div class="gradient-bg rounded-2xl p-8 text-white text-center card-shadow">
+                <h1 class="text-4xl font-bold mb-4">
+                    <i class="fas fa-leaf mr-3"></i>
+                    Calculateur d'Empreinte Carbone
+                </h1>
+                <p class="text-xl mb-2">Stockage Numérique - Méthodologie Data M4R®</p>
+                <p class="text-lg opacity-90">Par <strong>Systnaps</strong> | Évaluation instantanée et précise</p>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                
+                <!-- Formulaire de calcul -->
+                <div class="bg-white rounded-2xl p-8 card-shadow">
+                    <h2 class="text-2xl font-bold text-gray-800 mb-6">
+                        <i class="fas fa-calculator mr-3 text-blue-600"></i>
+                        Paramètres de calcul
+                    </h2>
+                    
+                    <div class="space-y-6">
+                        <!-- Volume de stockage -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Volume de stockage total
+                            </label>
+                            <div class="flex items-center space-x-4">
+                                <input type="number" id="storageVolume" value="500" min="1" 
+                                       class="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <select id="storageUnit" class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                    <option value="1">GO (Gigaoctets)</option>
+                                    <option value="1000">GO (Téraoctets)</option>
+                                    <option value="1000000">GO (Pétaoctets)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Type d'organisation -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Type d'organisation
+                            </label>
+                            <select id="orgType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="1.2">👤 Particulier/Freelance (1,2x)</option>
+                                <option value="5">🏪 TPE (1-9 employés) (5x)</option>
+                                <option value="10">🏢 PME (10-49 employés) (10x)</option>
+                                <option value="13">🏭 ETI (50-249 employés) (13x)</option>
+                                <option value="21">🌐 Grande Entreprise (250+ employés) (21x)</option>
+                            </select>
+                        </div>
+
+                        <!-- Type d'infrastructure -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Type d'infrastructure
+                            </label>
+                            <select id="infraType" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="0.2095">Standard (Mix énergétique moyen)</option>
+                                <option value="0.1676">Optimisé (20% énergie verte)</option>
+                                <option value="0.1467">Éco-responsable (30% énergie verte)</option>
+                                <option value="0.1048">Très vert (50% énergie verte)</option>
+                                <option value="0.0629">Ultra vert (70% énergie verte)</option>
+                                <option value="0.0419">100% renouvelable (80% énergie verte)</option>
+                                <option value="0.0210">Neutre carbone (90% énergie verte)</option>
+                            </select>
+                        </div>
+
+                        <!-- Durée -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Période d'évaluation
+                            </label>
+                            <select id="duration" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                                <option value="1">1 an</option>
+                                <option value="0.5">6 mois</option>
+                                <option value="0.25">3 mois</option>
+                                <option value="0.083">1 mois</option>
+                            </select>
+                        </div>
+
+                        <!-- Bouton de calcul -->
+                        <button onclick="calculateImpact()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition duration-300 transform hover:scale-105">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Calculer l'empreinte carbone
+                        </button>
+                    </div>
+
+                    <!-- Méthodologie -->
+                    <div class="mt-8 p-4 bg-gray-50 rounded-lg">
+                        <h3 class="font-semibold text-gray-800 mb-2">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Méthodologie Data M4R®
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-2">
+                            <strong>Formule :</strong> E = S × R × F × D
+                        </p>
+                        <ul class="text-xs text-gray-500 space-y-1">
+                            <li>• E : Empreinte carbone (kg CO₂)</li>
+                            <li>• S : Volume de stockage (GO)</li>
+                            <li>• R : Facteur de redondance</li>
+                            <li>• F : Facteur d'émission (kg CO₂/GO/an)</li>
+                            <li>• D : Durée (années)</li>
+                        </ul>
+                        <p class="text-xs text-gray-500 mt-2">
+                            Référence : 0,2095 kg CO₂/GO/an (Green Cloud Computing)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Résultats -->
+                <div class="space-y-6">
+                    <!-- Information de calcul -->
+                    <div class="info-card rounded-2xl p-6 text-gray-800 card-shadow">
+                        <h3 class="text-xl font-bold mb-4">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Calcul détaillé
+                        </h3>
+                        <div class="space-y-2 text-sm">
+                            <div>Volume déclaré : <span id="volumeDeclare" class="font-bold text-blue-600">500 GO</span></div>
+                            <div>Facteur de redondance : <span id="facteurRedondance" class="font-bold text-purple-600">10x</span></div>
+                            <div>Volume réel : <span id="volumeReel" class="font-bold text-red-600">5 000 GO</span></div>
+                        </div>
+                    </div>
+
+                    <!-- Empreintes comparées -->
+                    <div class="bg-white rounded-2xl p-6 card-shadow">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-balance-scale mr-2 text-orange-500"></i>
+                            Comparaison des Empreintes
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="p-4 bg-green-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-medium text-green-800">Empreinte de Base</div>
+                                        <div class="text-sm text-green-600">(sans redondance)</div>
+                                    </div>
+                                    <span class="text-xl font-bold text-green-600" id="carbonBase">104,75 kg CO₂</span>
+                                </div>
+                            </div>
+                            
+                            <div class="p-4 bg-red-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-medium text-red-800">Empreinte Réelle</div>
+                                        <div class="text-sm text-red-600">(avec redondance)</div>
+                                    </div>
+                                    <span class="text-xl font-bold text-red-600" id="carbonReal">1 048 kg CO₂</span>
+                                </div>
+                            </div>
+
+                            <div class="p-4 bg-orange-50 rounded-lg">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <div class="font-medium text-orange-800">Impact de la redondance</div>
+                                        <div class="text-sm text-orange-600" id="periodText">pour 1 an</div>
+                                    </div>
+                                    <span class="text-xl font-bold text-orange-600" id="carbonDiff">+943 kg CO₂</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Équivalence voiture -->
+                    <div class="bg-white rounded-2xl p-6 card-shadow">
+                        <h3 class="text-xl font-bold text-gray-800 mb-4">
+                            <i class="fas fa-car mr-2 text-red-600"></i>
+                            Équivalence transport
+                        </h3>
+                        
+                        <div class="p-4 bg-red-50 rounded-lg">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center">
+                                    <i class="fas fa-car text-red-500 text-2xl mr-3"></i>
+                                    <span class="font-medium">Voiture thermique</span>
+                                </div>
+                                <span class="text-xl font-bold text-red-600" id="carEquiv">4 807 km</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Potentiel d'optimisation -->
+                    <div class="eco-card rounded-2xl p-6 text-white card-shadow">
+                        <h3 class="text-xl font-bold mb-4">
+                            <i class="fas fa-seedling mr-2"></i>
+                            Potentiel d'optimisation
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold" id="reduction70">-734 kg</div>
+                                <div class="text-sm opacity-90">Réduction 70%</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold" id="reduction90">-943 kg</div>
+                                <div class="text-sm opacity-90">Réduction 90%</div>
+                            </div>
+                        </div>
+                        <div class="mt-4 text-center">
+                            <p class="text-sm opacity-90">Migration vers infrastructure verte</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Graphique -->
+            <div class="mt-8 bg-white rounded-2xl p-8 card-shadow">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-chart-bar mr-3 text-purple-600"></i>
+                    Analyse comparative
+                </h3>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div>
+                        <h4 class="text-lg font-bold mb-4 text-center">Comparaison des scénarios</h4>
+                        <div style="height: 400px;">
+                            <canvas id="comparisonChart"></canvas>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 class="text-lg font-bold mb-4 text-center">Répartition par environnement</h4>
+                        <div style="height: 400px;">
+                            <canvas id="environmentChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tableau de décomposition -->
+            <div class="mt-8 bg-white rounded-2xl p-8 card-shadow">
+                <h3 class="text-2xl font-bold text-gray-800 mb-6">
+                    <i class="fas fa-table mr-3 text-indigo-600"></i>
+                    Décomposition par environnement
+                </h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead>
+                            <tr class="bg-gray-50">
+                                <th class="px-4 py-3 text-left font-semibold text-gray-700">Environnement</th>
+                                <th class="px-4 py-3 text-left font-semibold text-gray-700">Rôle</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-700">Copies</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-700">Volume (GO)</th>
+                                <th class="px-4 py-3 text-center font-semibold text-gray-700">Impact CO₂ (kg/an)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="environmentTable">
+                            <!-- Contenu généré dynamiquement -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="mt-8 text-center p-6 bg-gray-800 rounded-2xl text-white">
+                <h3 class="text-xl font-bold mb-2">
+                    <i class="fas fa-building mr-2"></i>
+                    Systnaps - Expertise Data M4R®
+                </h3>
+                <p class="text-gray-300 mb-4">Solutions d'optimisation pour réduire l'empreinte carbone numérique</p>
+                <div class="flex justify-center space-x-6 text-sm">
+                    <span><i class="fas fa-check text-green-400 mr-1"></i> Méthodologie certifiée</span>
+                    <span><i class="fas fa-check text-green-400 mr-1"></i> Standards GHG Protocol</span>
+                    <span><i class="fas fa-check text-green-400 mr-1"></i> Validation MyImpact</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let comparisonChart = null;
+        let environmentChart = null;
+
+        const environmentData = {
+            1.2: [
+                { env: 'PRODUCTION', role: 'Base opérationnelle', copies: 1, factor: 1.0 },
+                { env: 'SAUVEGARDE', role: 'Sauvegarde locale', copies: 1, factor: 0.2 }
+            ],
+            5: [
+                { env: 'PRODUCTION', role: 'Base opérationnelle', copies: 2, factor: 0.5 },
+                { env: 'DÉVELOPPEMENT', role: 'Environnement de dev', copies: 1, factor: 0.3 },
+                { env: 'RECETTE', role: 'Tests et validation', copies: 1, factor: 0.2 }
+            ],
+            10: [
+                { env: 'PRODUCTION', role: 'Base opérationnelle', copies: 4, factor: 0.4 },
+                { env: 'DÉVELOPPEMENT', role: 'Environnement de dev', copies: 2, factor: 0.3 },
+                { env: 'RECETTE', role: 'Tests et validation', copies: 2, factor: 0.2 },
+                { env: 'PRÉPROD', role: 'Réplique de production', copies: 2, factor: 0.1 }
+            ],
+            13: [
+                { env: 'PRODUCTION', role: 'Base opérationnelle', copies: 5, factor: 0.38 },
+                { env: 'DÉVELOPPEMENT', role: 'Environnement de dev', copies: 3, factor: 0.23 },
+                { env: 'RECETTE', role: 'Tests et validation', copies: 3, factor: 0.23 },
+                { env: 'PRÉPROD', role: 'Réplique de production', copies: 4, factor: 0.16 }
+            ],
+            21: [
+                { env: 'PRODUCTION', role: 'Base opérationnelle', copies: 7, factor: 0.33 },
+                { env: 'DÉVELOPPEMENT', role: 'Environnement de dev', copies: 4, factor: 0.19 },
+                { env: 'RECETTE', role: 'Tests et validation', copies: 4, factor: 0.19 },
+                { env: 'PRÉPROD', role: 'Réplique de production', copies: 5, factor: 0.24 },
+                { env: 'MIROIR', role: 'Disaster recovery', copies: 6, factor: 0.05 }
+            ]
+        };
+
+        function calculateImpact() {
+            const volume = parseFloat(document.getElementById('storageVolume').value) || 0;
+            const unit = parseFloat(document.getElementById('storageUnit').value);
+            const orgFactor = parseFloat(document.getElementById('orgType').value);
+            const infraFactor = parseFloat(document.getElementById('infraType').value);
+            const duration = parseFloat(document.getElementById('duration').value);
+
+            // Calcul total en GO
+            const totalGo = volume * unit;
+            const realVolume = totalGo * orgFactor;
+            
+            // Calculs d'empreinte
+            const carbonBase = totalGo * infraFactor * duration;
+            const carbonReal = realVolume * infraFactor * duration;
+            const carbonDiff = carbonReal - carbonBase;
+            
+            // Mise à jour de l'affichage
+            document.getElementById('volumeDeclare').textContent = `${totalGo.toLocaleString()} GO`;
+            document.getElementById('facteurRedondance').textContent = `${orgFactor}x`;
+            document.getElementById('volumeReel').textContent = `${realVolume.toLocaleString()} GO`;
+            
+            document.getElementById('carbonBase').textContent = `${carbonBase.toFixed(2)} kg CO₂`;
+            document.getElementById('carbonReal').textContent = `${carbonReal.toFixed(2)} kg CO₂`;
+            document.getElementById('carbonDiff').textContent = `+${carbonDiff.toFixed(2)} kg CO₂`;
+            
+            // Période
+            const periodMap = {
+                '1': 'pour 1 an',
+                '0.5': 'pour 6 mois',
+                '0.25': 'pour 3 mois',
+                '0.083': 'pour 1 mois'
+            };
+            document.getElementById('periodText').textContent = periodMap[duration.toString()] || 'pour la période';
+            
+            // Équivalence voiture (basée sur l'empreinte réelle)
+            const carKm = (carbonReal / 0.218).toFixed(0);
+            document.getElementById('carEquiv').textContent = `${carKm.toLocaleString()} km`;
+            
+            // Potentiel de réduction (basé sur l'empreinte réelle)
+            const reduction70 = (carbonReal * 0.7).toFixed(0);
+            const reduction90 = (carbonReal * 0.9).toFixed(0);
+            
+            document.getElementById('reduction70').textContent = `-${reduction70} kg`;
+            document.getElementById('reduction90').textContent = `-${reduction90} kg`;
+            
+            // Mise à jour des graphiques
+            updateCharts(carbonReal);
+            updateEnvironmentTable(totalGo, orgFactor, infraFactor, duration);
+        }
+
+        function updateCharts(currentImpact) {
+            const optimized70 = currentImpact * 0.3;
+            const optimized90 = currentImpact * 0.1;
+
+            // Graphique de comparaison
+            if (comparisonChart) comparisonChart.destroy();
+            
+            const ctx1 = document.getElementById('comparisonChart').getContext('2d');
+            comparisonChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: ['Actuel', 'Optimisé 70%', 'Optimisé 90%'],
+                    datasets: [{
+                        label: 'kg CO₂',
+                        data: [currentImpact, optimized70, optimized90],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(34, 197, 94, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        function updateEnvironmentTable(baseVolume, orgFactor, infraFactor, duration) {
+            const environments = environmentData[orgFactor] || environmentData[10];
+            const tableBody = document.getElementById('environmentTable');
+            
+            tableBody.innerHTML = '';
+            
+            environments.forEach(env => {
+                const envVolume = baseVolume * env.factor * orgFactor;
+                const envImpact = envVolume * infraFactor * duration;
+                
+                const row = document.createElement('tr');
+                row.className = 'border-b';
+                row.innerHTML = `
+                    <td class="px-4 py-3 font-medium">${env.env}</td>
+                    <td class="px-4 py-3">${env.role}</td>
+                    <td class="px-4 py-3 text-center">${env.copies}</td>
+                    <td class="px-4 py-3 text-center">${envVolume.toFixed(0)}</td>
+                    <td class="px-4 py-3 text-center">${envImpact.toFixed(1)}</td>
+                `;
+                tableBody.appendChild(row);
+            });
+
+            // Graphique environnements
+            if (environmentChart) environmentChart.destroy();
+            
+            const ctx2 = document.getElementById('environmentChart').getContext('2d');
+            environmentChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: environments.map(env => env.env),
+                    datasets: [{
+                        data: environments.map(env => env.factor),
+                        backgroundColor: [
+                            '#3B82F6', '#10B981', '#F59E0B', '#EF4444', '#8B5CF6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+
+        // Calcul initial au chargement
+        document.addEventListener('DOMContentLoaded', function() {
+            calculateImpact();
+            
+            // Recalcul automatique lors des changements
+            document.getElementById('storageVolume').addEventListener('input', calculateImpact);
+            document.getElementById('storageUnit').addEventListener('change', calculateImpact);
+            document.getElementById('orgType').addEventListener('change', calculateImpact);
+            document.getElementById('infraType').addEventListener('change', calculateImpact);
+            document.getElementById('duration').addEventListener('change', calculateImpact);
+        });
+    </script>
+</body>
+</html>
